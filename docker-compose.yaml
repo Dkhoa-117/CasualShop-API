@@ -1,0 +1,36 @@
+version: '1.0'
+
+services:
+  mysql:
+    container_name: casualshop-mysql
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: public
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"  
+    volumes:
+      - db-data:/data
+      - ./database/initialDB.sql:/docker-entrypoint-initdb.d/initialDB.sql
+      - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql 
+    networks: 
+      - CasualShopNet
+
+  nodejs:
+    container_name: casualshop-nodejs
+    depends_on:
+      - mysql
+    build: .
+    ports: 
+     - "3000:3000"
+    restart: unless-stopped
+    networks: 
+      - CasualShopsNet
+
+networks:
+  CasualShopNet:
+volumes:
+  db-data:
