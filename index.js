@@ -7,10 +7,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // routes
-app.use("/api/v1/user", router.user);
-app.use("/api/v1/movie", router.movie);
-app.use("/api/v1/person", router.person);
-app.use("/api/v1/comment", router.comment);
+app.use("/api/v1/product", router.product);
+app.use("/api/v1/category", router.category);
+app.use("/api/v1/discount", router.discount);
 
 // middlewares
 app.use(errorHandler);
