@@ -28,8 +28,8 @@ listOfProduct = [];
 for _ in range(50):
     listOfProduct.append(Product)
 def ProductGen(num):
-    template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')"
-    result = ', '.join([template.format(listOfProduct[i].name, listOfProduct[i].description, listOfProduct[i].price, listOfProduct[i].category, listOfProduct[i].discount_id, listOfProduct[i].num_product, listOfProduct[i].num_buy, listOfProduct[i].like, listOfProduct[i].rating) for i in range(num)])
+    template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')"
+    result = ', '.join([template.format(listOfProduct[i].name, listOfProduct[i].img_path, listOfProduct[i].description, listOfProduct[i].price, listOfProduct[i].category, listOfProduct[i].discount_id, listOfProduct[i].num_product, listOfProduct[i].num_buy, listOfProduct[i].like, listOfProduct[i].rating) for i in range(num)])
     return result
 
 def DiscountGen(num):
@@ -37,7 +37,7 @@ def DiscountGen(num):
     result = ', '.join([template.format(WordGen(2), random.randint(25, 70)) for _ in range(num)])
     return result
 
-logging.info(ProductGen(50))
-logging.info('-'.join(['-' for _ in range(10)]))
+logging.info(ProductGen(len(listOfProduct)))
+logging.info('-'.join(['-' for _ in range(20)]))
 logging.info(DiscountGen(20))
 

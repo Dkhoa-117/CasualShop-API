@@ -1,4 +1,4 @@
-FROM node:18
+FROM node:latest
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ COPY . .
 
 ENV PORT=3000
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "build" ]
