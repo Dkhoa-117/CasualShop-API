@@ -10,7 +10,7 @@ dotenv.config();
 app.use((req, res, next) => {
 	res.header(
 		"Access-Control-Allow-Origin",
-		"casualshop-api-production.up.railway.app"
+		"https://casualshop-api-production.up.railway.app"
 	);
 	res.header(
 		"Access-Control-Allow-Headers",
