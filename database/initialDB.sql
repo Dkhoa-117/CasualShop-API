@@ -11,13 +11,15 @@ CREATE TABLE `product` (
   `num_product` int DEFAULT 0,
   `num_buy` int DEFAULT 0,
   `like_count` int DEFAULT 0,
-  `rating` int DEFAULT 0
+  `rating` int DEFAULT 0,
+  `create_at` timestamp
 );
 
 CREATE TABLE `discount` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
-  `rate` int DEFAULT 0
+  `rate` int DEFAULT 0,
+  `create_at` timestamp
 );
 
 CREATE TABLE `product_category` (
