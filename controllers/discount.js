@@ -2,7 +2,7 @@ import asyncWrapper from "../middlewares/async.js";
 import db from "../utils/connection-pool.js";
 
 export default {
-	getAll: asyncWrapper((req, res) => {
+	getAll: asyncWrapper((req, res, next) => {
 		db.getConnection((err, con) => {
 			if (err) {
 				console.log(err);

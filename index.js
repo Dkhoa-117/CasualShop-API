@@ -7,6 +7,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // routes
+app.use((req, res, next) => {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header(
+		"Access-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept"
+	);
+	next();
+});
 app.use("/images", express.static("images"));
 app.use("/api/v1/product", router.product);
 app.use("/api/v1/category", router.category);
