@@ -28,12 +28,12 @@ listOfProduct = [];
 for _ in range(50):
     listOfProduct.append(Product)
 def ProductGen(num):
-    template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')"
+    template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', NOW())"
     result = ', '.join([template.format(listOfProduct[i].name, listOfProduct[i].img_path, listOfProduct[i].description, listOfProduct[i].price, listOfProduct[i].category, listOfProduct[i].discount_id, listOfProduct[i].num_product, listOfProduct[i].num_buy, listOfProduct[i].like, listOfProduct[i].rating) for i in range(num)])
     return result
 
 def DiscountGen(num):
-    template = "('{0}', '{1}')"
+    template = "('{0}', '{1}', NOW())"
     result = ', '.join([template.format(WordGen(2), random.randint(25, 70)) for _ in range(num)])
     return result
 
