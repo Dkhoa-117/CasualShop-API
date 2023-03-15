@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 // routes
+app.use("/images", express.static("images"));
 app.use("/api/v1/product", router.product);
 app.use("/api/v1/category", router.category);
 app.use("/api/v1/discount", router.discount);
