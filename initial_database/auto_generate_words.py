@@ -13,20 +13,22 @@ def WordGen(numOfWord):
 
 sub_category = ['gods','creatures', 'items', 'notebook', 'novel', 'key_chain', 'backpack_wallet', 'necklace']
 class Product:
-    name = WordGen(5)
-    img_path = '/image00{0}'.format(random.randint(0, 9))
-    description = WordGen(30)
-    price = random.randint(10, 3000)
-    category = sub_category[random.randint(0, 7)]
-    discount_id = random.randint(0, 20)
-    num_product = random.randint(50, 200)
-    num_buy = random.randint(1, 600)
-    like = random.randint(0, 200)
-    rating = random.randint(0, 5)
+    def __init__(self):
+        self.name = WordGen(5)
+        self.img_path = '/image00{0}'.format(random.randint(0, 9))
+        self.description = WordGen(30)
+        self.price = random.randint(10, 3000)
+        self.category = sub_category[random.randint(0, 7)]
+        self.discount_id = random.randint(0, 20)
+        self.num_product = random.randint(50, 200)
+        self.num_buy = random.randint(1, 600)
+        self.like = random.randint(0, 200)
+        self.rating = random.randint(0, 5)
 
 listOfProduct = [];
 for _ in range(50):
-    listOfProduct.append(Product)
+    product = Product()
+    listOfProduct.append(product)
 def ProductGen(num):
     template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', NOW())"
     result = ', '.join([template.format(listOfProduct[i].name, listOfProduct[i].img_path, listOfProduct[i].description, listOfProduct[i].price, listOfProduct[i].category, listOfProduct[i].discount_id, listOfProduct[i].num_product, listOfProduct[i].num_buy, listOfProduct[i].like, listOfProduct[i].rating) for i in range(num)])
