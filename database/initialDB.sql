@@ -7,11 +7,13 @@ CREATE TABLE `product` (
   `description` varchar(255),
   `price` int,
   `category` ENUM ('gods', 'creatures', 'items', 'notebook', 'novel', 'key_chain', 'backpack_wallet', 'necklace'),
+  `material` ENUM ('clay', 'metal', 'wood', 'glass', 'plastic')
+  `co` ENUM ('vietnam', 'america', 'china', 'england', 'italy', 'france', 'japan', 'india', 'brazil', 'argentina', 'canada')
   `discount_id` int,
   `num_product` int DEFAULT 0,
   `num_buy` int DEFAULT 0,
   `like_count` int DEFAULT 0,
-  `rating` int DEFAULT 0
+  `rating` int DEFAULT 0,
   `create_at` timestamp
 );
 
