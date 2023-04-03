@@ -13,7 +13,7 @@ export default {
 					console.log(err);
 					throw err;
 				}
-				res.status(200).json({ data });
+				res.status(200).json({ message: "Success", data });
 				con.release();
 			});
 		});
@@ -31,7 +31,7 @@ export default {
 						console.log(err);
 						throw err;
 					}
-					res.status(200).json({ data });
+					res.status(200).json({ message: "Success", data });
 					con.release();
 				}
 			);

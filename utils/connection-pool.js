@@ -1,4 +1,4 @@
-import mysql from "mysql";
+import mysql from "mysql2";
 export const pool = mysql.createPool({
 	connectionLimit: 20,
 	host: process.env.MYSQLHOST,
@@ -6,9 +6,24 @@ export const pool = mysql.createPool({
 	user: process.env.MYSQLUSER,
 	password: process.env.MYSQLPASSWORD,
 	database: process.env.MYSQLDATABASE,
+	multipleStatements: true,
+	waitForConnections: true,
 });
+
 export default {
-	getConnection: (callback) => {
-		return pool.getConnection(callback);
+	getConnection: (callback) => pool.getConnection(callback),
+	makeQuery: (query) => {
+		pool.getConnection((err, conn) => {
+			if (err) {
+				console.log(err.message);
+			}
+			conn.query(query, (err, data) => {
+				if (err) {
+					console.log(err.message);
+				}
+				console.log(data);
+			});
+			conn.release();
+		});
 	},
 };
