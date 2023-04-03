@@ -3,7 +3,7 @@ const app = express();
 import router from "./routes/index.js";
 import errorHandler from "./middlewares/error-handler.js";
 import notFoundHandler from "./middlewares/not-found.js";
-import setup from "./database/init";
+import setup from "./database/init.js";
 import dotenv from "dotenv";
 import cors from "cors";
 dotenv.config();
