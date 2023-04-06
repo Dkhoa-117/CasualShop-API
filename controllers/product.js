@@ -140,7 +140,9 @@ export default {
 		});
 	}),
 	getProductBySubCategory: asyncWrapper(async (req, res, next) => {
-		const { uid, category } = req.query;
+		const { uid } = req.query;
+		const category = req.params.category;
+
 		await pool
 			.promise()
 			.query(
@@ -167,7 +169,8 @@ export default {
 			});
 	}),
 	getProductByCategory: asyncWrapper(async (req, res, next) => {
-		const { uid, category } = req.query;
+		const { uid } = req.query;
+		const category = req.params.category;
 		await pool
 			.promise()
 			.query(
