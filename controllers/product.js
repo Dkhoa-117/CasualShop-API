@@ -139,4 +139,58 @@ export default {
 			);
 		});
 	}),
+	getProductBySubCategory: asyncWrapper(async (req, res, next) => {
+		const { uid, category } = req.query;
+		await pool
+			.promise()
+			.query(
+				`SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.category, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM (SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId WHERE category=${category};`
+			)
+			.then(async (result) => {
+				let data = result[0];
+				if (uid) {
+					const [rows, fields] = await pool
+						.promise()
+						.query(
+							`SELECT * FROM user_like WHERE userId = ${uid} AND productId = ${req.params.id};`
+						);
+					const userLiked = rows;
+					data = {
+						...data[0],
+						isLiked: userLiked.length === 0 ? false : true,
+					};
+				}
+				res.status(200).json({ message: "Success", data });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}),
+	getProductByCategory: asyncWrapper(async (req, res, next) => {
+		const { uid, category } = req.query;
+		await pool
+			.promise()
+			.query(
+				`SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.category, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM ((SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId) a LEFT JOIN (SELECT * FROM product_category WHERE name=${category}) b ON a.category = b.subCategory;`
+			)
+			.then(async (result) => {
+				let data = result[0];
+				if (uid) {
+					const [rows, fields] = await pool
+						.promise()
+						.query(
+							`SELECT * FROM user_like WHERE userId = ${uid} AND productId = ${req.params.id};`
+						);
+					const userLiked = rows;
+					data = {
+						...data[0],
+						isLiked: userLiked.length === 0 ? false : true,
+					};
+				}
+				res.status(200).json({ message: "Success", data });
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}),
 };
