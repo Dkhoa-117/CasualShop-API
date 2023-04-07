@@ -146,7 +146,7 @@ export default {
 		await pool
 			.promise()
 			.query(
-				`SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.subCategory, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM (SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId WHERE subCategory='${category}';`
+				`SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.category, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM (SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId WHERE category='${category}';`
 			)
 			.then(async (result) => {
 				let data = result[0];
@@ -174,7 +174,7 @@ export default {
 		await pool
 			.promise()
 			.query(
-				`SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.category, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM (SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId WHERE category='${category}';`
+				`SELECT * FROM (SELECT a.id, a.name, a.imgSrc, a.description, a.price, a.category as subCategory, a.material, a.origin, a.discountId, a.inventory, a.quantitySold, a.createAt, a.likeCount, b.rating FROM (SELECT product.id, product.name, product.imgSrc, product.description, product.price, product.category, product.material, product.origin, product.discountId, product.inventory, product.quantitySold, product.createAt, b.likeCount FROM product LEFT JOIN (SELECT productId, COUNT(userId) as likeCount FROM user_like GROUP BY productId) b ON product.id = b.productId) a LEFT JOIN (SELECT productId, AVG(rating) as rating FROM user_rating GROUP BY productId) b ON a.id = b.productId) a RIGHT JOIN (SELECT subCategory, name as category FROM product_category WHERE name='${category}') b ON a.subCategory = b.subCategory;`
 			)
 			.then(async (result) => {
 				let data = result[0];
