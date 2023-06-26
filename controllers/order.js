@@ -173,6 +173,11 @@ export default {
 			);
 		});
 	}), // -> put
+	createCart: asyncWrapper(async (req, res) => {
+		const {uid} = req.body;
+		utilities.newUserCart(uid)
+		res.status(200).json({message: "Success"})
+	})
 };
 
 const utilities = {
