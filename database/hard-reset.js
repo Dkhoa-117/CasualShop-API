@@ -1,4 +1,3 @@
-import { reset } from "nodemon";
 import db from "../utils/connection-pool.js";
 
 const makeQuery = (query) => {
