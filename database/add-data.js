@@ -27,4 +27,8 @@ export default {
         VALUES`;
 		makeQuery(query, "./category.txt");
 	},
+	order: () => {
+		const query = `INSERT INTO user_order (product_id user_id quantity price total_price status)
+		VALUES`;
+	},
 };

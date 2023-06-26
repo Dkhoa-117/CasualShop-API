@@ -8,6 +8,9 @@ export default {
 		create.discount();
 		create.userLike();
 		create.userRating();
+		create.userOrder()
+		create.order();
+		create.wishList();
 		setTimeout(() => {
 			addData.category();
 			addData.discount();

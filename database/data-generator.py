@@ -25,13 +25,13 @@ def WordGen(numOfWord):
     result = ' '.join([words[random.randint(0,len(words) - 1)].decode('utf-8').capitalize() for _ in range(numOfWord)])
     return result
 
-sub_category = ['gods','creatures', 'items', 'notebook', 'novel', 'key_chain', 'backpack_wallet', 'necklace']
+sub_category = ['gods','creatures', 'items', 'notebook', 'novel', 'keyChain', 'backpackWallet', 'necklace']
 material = ['clay', 'metal', 'wood', 'glass', 'plastic']
 origin = ['vietnam', 'america', 'china', 'england', 'italy', 'france', 'japan', 'india', 'brazil', 'argentina', 'canada']
 class Product:
     def __init__(self):
         self.name = WordGen(5)
-        self.imgSrc = '/image00{0}'.format(random.randint(1, 9))
+        self.imgSrc = '/images/image00{0}.jpeg'.format(random.randint(1, 9))
         self.description = WordGen(30)
         self.price = round(random.random()*100, 2)
         self.category = sub_category[random.randint(0, 7)]

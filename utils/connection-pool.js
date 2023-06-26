@@ -1,4 +1,6 @@
 import mysql from "mysql2";
+import dotenv from "dotenv";
+dotenv.config();
 export const pool = mysql.createPool({
 	connectionLimit: 20,
 	host: process.env.MYSQLHOST,
@@ -6,9 +8,6 @@ export const pool = mysql.createPool({
 	user: process.env.MYSQLUSER,
 	password: process.env.MYSQLPASSWORD,
 	database: process.env.MYSQLDATABASE,
-	// user: "root",
-	// password: "123456",
-	// database: "mydb",
 	multipleStatements: true,
 	waitForConnections: true,
 });
