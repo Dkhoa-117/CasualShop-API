@@ -23,7 +23,8 @@ export default {
 				if (err) {
 					console.log(err.message);
 				}
-				console.log(data);
+				const output = query.split(" ")
+				console.log(`	${output[0]} ${output[2]}`);
 			});
 			conn.release();
 		});

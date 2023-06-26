@@ -32,7 +32,7 @@ class Product:
     def __init__(self):
         self.name = WordGen(5)
         self.imgSrc = '/images/image00{0}.jpeg'.format(random.randint(1, 9))
-        self.description = WordGen(30)
+        self.description = WordGen(20)
         self.price = round(random.random()*100, 2)
         self.category = sub_category[random.randint(0, 7)]
         self.material = material[random.randint(0, 4)]
@@ -46,12 +46,12 @@ for _ in range(50):
     product = Product()
     listOfProduct.append(product)
 def ProductGen(num):
-    template = "('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', NOW())"
+    template = "('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', {7}, {8}, {9}, NOW())"
     result = ', '.join([template.format(listOfProduct[i].name, listOfProduct[i].imgSrc, listOfProduct[i].description, listOfProduct[i].price, listOfProduct[i].category, listOfProduct[i].material, listOfProduct[i].origin, listOfProduct[i].discountId, listOfProduct[i].inventory, listOfProduct[i].quantitySold) for i in range(num)])
     return result
 
 def DiscountGen(num):
-    template = "('{0}', '{1}', NOW())"
+    template = "('{0}', {1}, NOW())"
     result = ', '.join([template.format(WordGen(2), random.randint(25, 70)) for _ in range(num)])
     return result
 

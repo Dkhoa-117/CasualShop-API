@@ -21,8 +21,8 @@ app.get("/ping", (req, res) => {
 	res.status(200).send("Server is running");
 });
 app.get("/initial", (req, res) => {
-	hardReset.all();	
-	setup.initial();
+	hardReset.all()
+	setTimeout(() => setup.initial(), 5000);	
 	res.send("initial database");
 });
 // middlewares

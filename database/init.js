@@ -11,10 +11,11 @@ export default {
 		create.userOrder()
 		create.order();
 		create.wishList();
+
 		setTimeout(() => {
-			addData.category();
 			addData.discount();
+			addData.category();
 			addData.product();
-		}, 3000);
+		}, 10000);
 	},
 };

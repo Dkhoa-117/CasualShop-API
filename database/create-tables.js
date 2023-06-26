@@ -11,7 +11,7 @@ export default {
             imgSrc varchar(255),
             description MEDIUMTEXT,
             price DECIMAL(4,2),
-            category ENUM ('gods', 'creatures', 'items', 'notebook', 'novel', 'key_chain', 'backpack_wallet', 'necklace'),
+            category ENUM ('gods', 'creatures', 'items', 'notebook', 'novel', 'keyChain', 'backpackWallet', 'necklace'),
             material ENUM ('clay', 'metal', 'wood', 'glass', 'plastic'),
             origin ENUM ('vietnam', 'america', 'china', 'england', 'italy', 'france', 'japan', 'india', 'brazil', 'argentina', 'canada'),
             discountId int,

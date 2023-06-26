@@ -1,21 +1,24 @@
 import db from "../utils/connection-pool.js";
 
 const makeQuery = (query) => {
-	return db.makeQuery(query).catch(err => console.log(err));
-};
-
+	return db.makeQuery(query)
+}
 function resetFn(table){
     makeQuery(`DROP TABLE ${table};`)
 }
 export default {
     all: () => {
-        resetFn("product");
-        resetFn("discount");
-        resetFn("product_category")
-        resetFn("user_like");
-        resetFn("user_rating");
-        resetFn("user_order");
-        resetFn("orders");
-        resetFn("wish_list");
+        try {
+            resetFn("user_like");
+            resetFn("discount");
+            resetFn("product_category")
+            resetFn("user_rating");
+            resetFn("user_order");
+            resetFn("orders");
+            resetFn("wish_list");
+            resetFn("product");
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
