@@ -192,7 +192,7 @@ const utilities = {
 				await pool
 					.promise()
 					.query(
-						`UPDATE user_order SET totalPrice = ${totalPrice} WHERE id = ${userorderId};`
+						`UPDATE user_order SET (totalPrice = ${totalPrice}, productQuantity = productQuantity + 1) WHERE id = ${userorderId};`
 					)
 					.catch((err) => {
 						console.log(err);
