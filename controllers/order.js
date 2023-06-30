@@ -77,7 +77,7 @@ export default {
 					await pool
 						.promise()
 						.query(
-							`INSERT INTO orders(userorderId, productId, quantity, price, totalPrice, createAt) VALUES ('${id}', ${
+							`INSERT IGNORE INTO orders(userorderId, productId, quantity, price, totalPrice, createAt) VALUES ('${id}', ${
 								product.id
 							}, ${quantity}, ${product.price}, ${
 								quantity * product.price
@@ -183,14 +183,14 @@ const utilities = {
 		await pool
 			.promise()
 			.query(
-				`SELECT SUM(totalPrice) AS totalPrice FROM orders WHERE userorderId ='${userorderId}';`
+				`SELECT SUM(totalPrice) AS totalPrice, COUNT(id) AS productQuantity FROM orders WHERE userorderId ='${userorderId}';`
 			)
 			.then(async (result) => {
-				let { totalPrice } = result[0][0];
+				let { totalPrice, productQuantity } = result[0][0];
 				await pool
 					.promise()
 					.query(
-						`UPDATE user_order SET totalPrice = ${totalPrice}, productQuantity = productQuantity + 1 WHERE id = ${userorderId};`
+						`UPDATE user_order SET totalPrice = ${totalPrice}, productQuantity = ${productQuantity} WHERE id = ${userorderId};`
 					)
 					.catch((err) => {
 						console.log(err);
@@ -210,4 +210,11 @@ const utilities = {
 				console.log(err);
 			});
 	},
+	clearCart: async (userOrderId) => {
+		await pool.promise().query(
+			`DELETE FROM ordres WHERE userorderId = ${userOrderId};`
+		).then((result) => {
+
+		})
+	}
 };
