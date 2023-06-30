@@ -128,11 +128,19 @@ export default {
 			});
 	}), //  -> put
 	removeFromCart: asyncWrapper(async (req, res) => {
-		const { product, id } = req.body;
+		const { product, id, status } = req.body;
 		db.getConnection((err, con) => {
 			if (err) {
 				console.log(err);
 				throw err;
+			}
+			if(status === 'all'){
+				if(utilities.clearCart(id)){
+					res.status(200).json({message: "Success"})
+				}else{
+					res.status(500).json({message: "Something went wrong"})
+				}
+				return;
 			}
 			con.query(
 				`DELETE FROM orders WHERE (userorderId=${id} AND productId = ${product});`,
@@ -212,9 +220,10 @@ const utilities = {
 	},
 	clearCart: async (userOrderId) => {
 		await pool.promise().query(
-			`DELETE FROM ordres WHERE userorderId = ${userOrderId};`
-		).then((result) => {
-
+			`DELETE FROM orders WHERE userorderId = ${userOrderId};`
+		).catch((err) => {
+			console.log(err)
 		})
+		return true
 	}
 };
