@@ -23,7 +23,6 @@ export default {
 	}),
 	add2WishList: asyncWrapper(async (req, res) => {
 		const { uid, productId } = req.body;
-		console.log(uid, productId);
 		await pool
 			.promise()
 			.query(

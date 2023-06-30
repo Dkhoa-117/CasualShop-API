@@ -14,8 +14,8 @@ export default {
 				await pool
 					.promise()
 					.query(`SELECT * FROM orders WHERE userorderId = '${id}'`)
-					.then(async (result) => {
-						data = { ...data, productList: result[0] };
+					.then(async (response) => {
+						data = { ...data, productList: response[0] };
 					});
 			})
 			.catch((err) => {
@@ -25,7 +25,6 @@ export default {
 	}),
 	getUserOrder: asyncWrapper(async (req, res) => {
 		const { status, uid } = req.query;
-		console.log(uid);
 		let query = "";
 		if (status === "all" || status === undefined) {
 			query = `SELECT * FROM user_order WHERE userId = '${uid}' AND NOT (status = 'cart');`;
@@ -53,7 +52,7 @@ export default {
 		await pool
 			.promise()
 			.query(
-				`SELECT a.name, a.imgSrc, b.userorderId, b.productId, b.createAt, b.quantity, b.price, b.totalPrice  FROM ((SELECT name, id, imgSrc from product) a LEFT JOIN (SELECT * FROM orders) b ON b.productId = a.id) WHERE b.userorderId = ${id};`
+				`SELECT b.id, a.name, a.imgSrc, b.userorderId, b.productId, b.createAt, b.quantity, b.price, b.totalPrice  FROM ((SELECT name, id, imgSrc from product) a LEFT JOIN (SELECT * FROM orders) b ON b.productId = a.id) WHERE b.userorderId = ${id};`
 			)
 			.then(async (result) => {
 				let data = result[0];
@@ -67,7 +66,6 @@ export default {
 	addToCart: asyncWrapper(async (req, res) => {
 		const { product, uid, quantity } = req.body;
 
-		console.log(product);
 		await pool
 			.promise()
 			.query(
@@ -101,7 +99,7 @@ export default {
 	}), //  -> post
 	adjustQuantity: asyncWrapper(async (req, res) => {
 		const { product, quantity, uid } = req.body;
-		await pool
+		await pool 
 			.promise()
 			.query(
 				`SELECT * FROM user_order WHERE (status='cart' AND userId='${uid}');`
