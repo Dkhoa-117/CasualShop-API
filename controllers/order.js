@@ -108,7 +108,7 @@ export default {
 				let { id } = result[0][0];
 				if (id) {
 					let query = "";
-					query = `UPDATE orders SET quantity = ${quantity}, totalPrice = totalPrice + price WHERE userorderId = ${id} AND productId = ${product.id};`;
+					query = `UPDATE orders SET quantity = ${quantity}, totalPrice = ${quantity} * price WHERE userorderId = ${id} AND productId = ${product.id};`;
 					await pool
 						.promise()
 						.query(query)
