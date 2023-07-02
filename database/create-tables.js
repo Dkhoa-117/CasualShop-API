@@ -65,16 +65,15 @@ export default {
 		makeQuery(query);
 	},
 	userOrder: () => {
-		const query = `CREATE TABLE user_order(id int AUTO_INCREMENT PRIMARY KEY,orderedDate timestamp, userId varchar(255),productQuantity int DEFAULT 0,price DECIMAL(4,2) DEFAULT 0,totalPrice DECIMAL(8,2) DEFAULT 0,status ENUM('cart','ordered','progressing','aborted','successfull'));`;
-    makeQuery(query);
-  },
+		const query = `CREATE TABLE user_order(id int AUTO_INCREMENT PRIMARY KEY,orderedDate timestamp, userId varchar(255),productQuantity int DEFAULT 0,price DECIMAL(4,2) DEFAULT 0,totalPrice DECIMAL(8,2) DEFAULT 0, discountRate int DEFAULT 0, status ENUM('cart','ordered','progressing','aborted','successfull'));`;
+		makeQuery(query);
+	},
 	order: () => {
-		const query = `CREATE TABLE orders(id int AUTO_INCREMENT PRIMARY KEY,userorderId int,createAt timestamp,productId int,quantity int,price DECIMAL(4, 2), totalPrice DECIMAL(8,2));`;
-    makeQuery(query);
-
-  },
+		const query = `CREATE TABLE orders(id int AUTO_INCREMENT PRIMARY KEY,userorderId int,createAt timestamp,productId int,quantity int,price DECIMAL(4, 2), totalPrice DECIMAL(8,2), UNIQUE no_duplicate(productId, userorderId));`;
+		makeQuery(query);
+	},
 	wishList: () => {
-		const query = `CREATE TABLE wish_list(id int AUTO_INCREMENT PRIMARY KEY, userId varchar(255), productId int, quantity int DEFAULT 0);`;
-    makeQuery(query);
-  },
+		const query = `CREATE TABLE wish_list(id int AUTO_INCREMENT PRIMARY KEY, userId varchar(255), productId int, quantity int DEFAULT 0), UNIQUE no_duplicate_wishlist(productId, userId);`;
+		makeQuery(query);
+	},
 };

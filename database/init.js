@@ -8,7 +8,7 @@ export default {
 		create.discount();
 		create.userLike();
 		create.userRating();
-		create.userOrder()
+		create.userOrder();
 		create.order();
 		create.wishList();
 
@@ -17,5 +17,7 @@ export default {
 			addData.category();
 			addData.product();
 		}, 10000);
+
+		addData.testingCart();
 	},
 };

@@ -3,13 +3,17 @@ import fs from "fs";
 import path from "path";
 
 const makeQuery = (query, dataFile) => {
-	fs.readFile(path.resolve(path.dirname(""), `${dataFile}`), "utf8", (err, data) => {
-		if (err) {
-			console.error(err);
-			return;
+	fs.readFile(
+		path.resolve(path.dirname(""), `${dataFile}`),
+		"utf8",
+		(err, data) => {
+			if (err) {
+				console.error(err);
+				return;
+			}
+			db.makeQuery(`${query} ${data}`);
 		}
-		db.makeQuery(`${query} ${data}`);
-	});
+	);
 };
 export default {
 	product: () => {
@@ -30,5 +34,9 @@ export default {
 	order: () => {
 		const query = `INSERT INTO user_order (product_id user_id quantity price total_price status)
 		VALUES`;
+	},
+	testingCart: () => {
+		const query = `insert into user_order(userId, status) values ('dOg8mkGOc5QvztBc4AhF8jQr42t2', 'cart');`;
+		db.makeQuery(`${query}`);
 	},
 };

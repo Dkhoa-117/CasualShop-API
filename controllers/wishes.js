@@ -26,7 +26,7 @@ export default {
 		await pool
 			.promise()
 			.query(
-				`INSERT INTO wish_list(productId, userId) VALUES (${productId}, '${uid}');`
+				`INSERT IGNORE INTO wish_list(productId, userId) VALUES (${productId}, '${uid}');`
 			)
 			.then(async (result) => {
 				let data = result[0];

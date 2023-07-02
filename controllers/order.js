@@ -1,3 +1,4 @@
+import { query } from "express";
 import asyncWrapper from "../middlewares/async.js";
 import db from "../utils/connection-pool.js";
 import { pool } from "../utils/connection-pool.js";
@@ -84,10 +85,13 @@ export default {
 							}, NOW());`
 						)
 						.then(async (result) => {
-							let data = result[0];
-							if (data) {
-								utilities.updateTotalPrice(id);
-								res.status(200).json({ message: "Success", data });
+							let data = { ...result[0] };
+							console.log(data);
+							if (data.affectedRows > 0) {
+								utilities.updateTotalPrice(id, 0);
+								res.status(200).json({ message: "Success" });
+							} else {
+								res.status(409).json({ message: "Already in Cart" });
 							}
 						})
 						.catch((err) => {
@@ -99,7 +103,7 @@ export default {
 	}), //  -> post
 	adjustQuantity: asyncWrapper(async (req, res) => {
 		const { product, quantity, uid } = req.body;
-		await pool 
+		await pool
 			.promise()
 			.query(
 				`SELECT * FROM user_order WHERE (status='cart' AND userId='${uid}');`
@@ -113,7 +117,7 @@ export default {
 						.promise()
 						.query(query)
 						.then(async (result) => {
-							utilities.updateTotalPrice(id);
+							utilities.updateTotalPrice(id, 0);
 							res.status(200).json({ message: "Success" });
 						})
 						.catch((err) => {
@@ -134,11 +138,11 @@ export default {
 				console.log(err);
 				throw err;
 			}
-			if(status === 'all'){
-				if(utilities.clearCart(id)){
-					res.status(200).json({message: "Success"})
-				}else{
-					res.status(500).json({message: "Something went wrong"})
+			if (status === "all") {
+				if (utilities.clearCart(id)) {
+					res.status(200).json({ message: "Success" });
+				} else {
+					res.status(500).json({ message: "Something went wrong" });
 				}
 				return;
 			}
@@ -149,30 +153,71 @@ export default {
 						console.log(err);
 						throw err;
 					}
-					utilities.updateTotalPrice(id);
+					utilities.updateTotalPrice(id, 0);
 					res.status(200).json({ message: "Success" });
 					con.release();
 				}
 			);
 		});
 	}), //  -> delete
-
+	checkout: asyncWrapper(async (req, res) => {
+		const { uid, id, orderIds, discountRate } = req.body;
+		console.log(
+			`UPDATE orders AS dest, (SELECT * FROM user_order WHERE (status = 'cart' AND productQuantity = 0 AND userId = '${uid}')) AS src SET dest.userorderId = src.id WHERE (dest.id IN (${orderIds}));`
+		);
+		db.getConnection((err, con) => {
+			if (err) {
+				console.log(err);
+				throw err;
+			}
+			utilities.newUserCart(uid);
+			if (orderIds && orderIds.length > 0) {
+				// ? move remain order from user_order *cart -> *new-cart
+				con.query(
+					`UPDATE orders AS dest, (SELECT * FROM user_order WHERE (status = 'cart' AND productQuantity = 0 AND userId = '${uid}')) AS src SET dest.userorderId = src.id WHERE (dest.id IN (${orderIds}));`
+				);
+			}
+			con.query(
+				`UPDATE user_order SET status = 'progressing', orderedDate = NOW(), discountRate = ${discountRate} WHERE (status = 'cart' AND id = ${id});`,
+				(err, data) => {
+					if (err) {
+						console.log(err);
+						throw err;
+					}
+					// update totalPrice & productQuantity of *New cart
+					con.query(
+						`SELECT id FROM user_order WHERE status='cart' AND userId='${uid}';`,
+						(err, data) => {
+							if (err) {
+								console.log(err);
+								throw err;
+							}
+							console.log(data[0]);
+							utilities.updateTotalPrice(data[0].id, 0);
+						}
+					);
+					// update totalPrice & productQuantity of *old cart
+					utilities.updateTotalPrice(id, discountRate);
+					res.status(200).json({ message: "Success" });
+					con.release();
+				}
+			);
+		});
+	}),
 	confirmOrder: asyncWrapper(async (req, res) => {
-		const { uid, id } = req.body;
+		const { id, shipping } = req.body;
 		db.getConnection((err, con) => {
 			if (err) {
 				console.log(err);
 				throw err;
 			}
 			con.query(
-				`UPDATE user_order SET status = 'ordered', orderedDate = NOW() WHERE (status = 'cart' AND id = ${id});`,
+				`UPDATE user_order SET status = 'ordered', orderedDate = NOW(), totalPrice = totalPrice + ${shipping} WHERE (status = 'progressing' AND id = ${id});`,
 				(err, data) => {
 					if (err) {
 						console.log(err);
-						s;
 						throw err;
 					}
-					utilities.newUserCart(uid);
 					res.status(200).json({ message: "Success" });
 					con.release();
 				}
@@ -180,14 +225,14 @@ export default {
 		});
 	}), // -> put
 	createCart: asyncWrapper(async (req, res) => {
-		const {uid} = req.body;
-		utilities.newUserCart(uid)
-		res.status(200).json({message: "Success"})
-	})
+		const { uid } = req.body;
+		utilities.newUserCart(uid);
+		res.status(200).json({ message: "Success" });
+	}),
 };
 
 const utilities = {
-	updateTotalPrice: async (userorderId) => {
+	updateTotalPrice: async (userorderId, discountRate) => {
 		await pool
 			.promise()
 			.query(
@@ -198,7 +243,9 @@ const utilities = {
 				await pool
 					.promise()
 					.query(
-						`UPDATE user_order SET totalPrice = ${totalPrice}, productQuantity = ${productQuantity} WHERE id = ${userorderId};`
+						`UPDATE user_order SET totalPrice = (${totalPrice}-${totalPrice}*${
+							discountRate / 100
+						}), productQuantity = ${productQuantity} WHERE id = ${userorderId};`
 					)
 					.catch((err) => {
 						console.log(err);
@@ -219,11 +266,12 @@ const utilities = {
 			});
 	},
 	clearCart: async (userOrderId) => {
-		await pool.promise().query(
-			`DELETE FROM orders WHERE userorderId = ${userOrderId};`
-		).catch((err) => {
-			console.log(err)
-		})
-		return true
-	}
+		await pool
+			.promise()
+			.query(`DELETE FROM orders WHERE userorderId = ${userOrderId};`)
+			.catch((err) => {
+				console.log(err);
+			});
+		return true;
+	},
 };

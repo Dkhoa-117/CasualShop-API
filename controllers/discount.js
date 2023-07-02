@@ -24,17 +24,20 @@ export default {
 				console.log(err);
 				throw err;
 			}
-			con.query(
-				`SELECT * FROM discount WHERE id=${req.params.id}`,
-				(err, data) => {
-					if (err) {
-						console.log(err);
-						throw err;
-					}
-					res.status(200).json({ message: "Success", data });
-					con.release();
+			const id = req.params.id;
+			if (isNaN(id)) {
+				res.status(500).json({ message: "Wrong id" });
+				con.release();
+				return;
+			}
+			con.query(`SELECT * FROM discount WHERE id=${id}`, (err, data) => {
+				if ((err, data.length < 0)) {
+					console.log(err);
+					throw err;
 				}
-			);
+				res.status(200).json({ message: "Success", data });
+				con.release();
+			});
 		});
 	}),
 };
